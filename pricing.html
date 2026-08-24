@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chain Lightning — Pricing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Afacad:wght@400;500;600;700&family=Afacad+Flux:wght@700;800;900&family=JetBrains+Mono:wght@500&family=Manrope:wght@400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --black-6:#0d0d0d; --black-5:#393939; --black-4:#676767; --black-2:#c5c5c5; --black-1:#e7e7e7;
+    --yellow-6:#f5c400; --yellow-3:#fbe691; --card:#171717; --gray-txt:#979797;
+    --f-display:'Afacad Flux',sans-serif; --f-body:'Afacad',sans-serif; --f-mono:'JetBrains Mono',monospace; --f-field:'Manrope',sans-serif;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  .cldm-home{background:var(--black-6); color:#fff; font-family:var(--f-body);}
+  .cldm-home a{text-decoration:none; color:inherit;}
+  .cldm-home button{font-family:inherit; border:none; background:none; cursor:pointer;}
+  .cldm-home button.btn-primary{background:var(--yellow-6); color:var(--black-6);}
+  .cldm-home a.btn-primary{color:var(--black-6);}
+  .cldm-home a.btn-secondary{color:var(--yellow-6);}
+  .cldm-home a.btn-dark{color:var(--yellow-6);}
+  .wrap{max-width:1440px; margin:0 auto; padding:0 120px; position:relative;}
+  .btn-primary{display:inline-flex; align-items:center; gap:10px; background:var(--yellow-6); color:var(--black-6); border:1px solid var(--yellow-6); border-radius:16px; padding:16px 24px; font-weight:600; font-size:16px; white-space:nowrap;}
+  .btn-secondary{display:inline-flex; align-items:center; gap:10px; background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.14); -webkit-backdrop-filter:blur(24px); backdrop-filter:blur(24px); color:var(--yellow-6); border-radius:16px; padding:16px 24px; font-weight:600; font-size:16px; white-space:nowrap;}
+  .btn-dark{display:inline-flex; align-items:center; gap:10px; background:var(--black-6); color:var(--yellow-6); border-radius:16px; padding:16px 24px; font-weight:600; font-size:16px; white-space:nowrap;}
+  .eyebrow{font-family:var(--f-mono); font-weight:500; font-size:12px; letter-spacing:1.5px; color:var(--yellow-6);}
+  .divider{height:1px; background:var(--black-5); width:100%;}
+  /* ============ NAV ============ */
+  .nav-row{display:flex; align-items:center; justify-content:space-between; padding:28px 0; position:relative; z-index:20;}
+  .logo-nav{display:flex; align-items:center; gap:10px; font-family:var(--f-display); font-weight:700;}
+  .cl-mark{position:relative; flex-shrink:0;}
+  .cl-mark .v1{position:absolute; left:0; top:0; width:100%; height:100%;}
+  .cl-mark .in1{position:absolute; top:0%; right:0%; bottom:4.63%; left:-10.59%;}
+  .cl-mark .in2{position:absolute; top:-15.15%; right:-6.38%; bottom:-5.83%; left:-14.6%;}
+  .cl-mark .v2{position:absolute; left:60.0%; top:51.84%; width:100%; height:100%; display:flex; align-items:center; justify-content:center;}
+  .cl-mark .v2-rot{transform:rotate(180deg); flex:none; width:100%; height:100%;}
+  .cl-mark .v2-box{position:relative; width:100%; height:100%;}
+  .cl-mark svg{display:block; width:100%; height:100%; max-width:none;}
+  .logo-nav svg{display:block;}
+  .logo-nav .logo-text{display:flex; flex-direction:column; line-height:1.05;}
+  .logo-nav .logo-text b{color:var(--yellow-6); font-size:25.76px; letter-spacing:0.3px;}
+  .logo-nav .logo-text span{color:#fff; font-family:var(--f-body); font-weight:500; font-size:10.69px; letter-spacing:4.17px;}
+  .nav-capsule{display:flex; align-items:center; gap:4px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:16px; padding:6px;}
+  .nav-capsule a.nav-link{padding:10px 16px; font-size:16px; font-weight:500; color:var(--black-2); border-radius:12px;}
+  .nav-capsule a.nav-link.active{color:var(--black-1);}
+  .nav-capsule .btn-primary{padding:10px 16px; font-size:16px; border-radius:12px;}
+  /* ============ PRICING HEADING + GRID ============ */
+  .price-section{padding:80px 120px; display:flex; flex-direction:column; align-items:center; gap:56px; position:relative; z-index:2;}
+  .price-heading{display:flex; flex-direction:column; align-items:center; gap:20px; text-align:center; max-width:760px;}
+  .price-heading .eyebrow{opacity:0; animation:heroFadeSlideIn .7s cubic-bezier(.22,.61,.36,1) forwards; animation-delay:.05s;}
+  .price-heading h1{font-family:var(--f-display); font-weight:900; text-transform:uppercase; font-size:clamp(30px,5vw,52px); line-height:1.05; letter-spacing:-1px; opacity:0; animation:heroFadeSlideIn .7s cubic-bezier(.22,.61,.36,1) forwards; animation-delay:.18s;}
+  .price-heading p{font-family:var(--f-body); font-size:17px; line-height:1.5; color:var(--black-1); opacity:0; animation:heroFadeSlideIn .7s cubic-bezier(.22,.61,.36,1) forwards; animation-delay:.31s;}
+  @keyframes heroFadeSlideIn{ from{opacity:0; transform:translateY(18px);} to{opacity:1; transform:translateY(0);} }
+  .pricing-grid{display:flex; gap:24px; align-items:stretch; width:100%; max-width:1188px; justify-content:center;}
+  /* overflow is NOT hidden here (moved onto .border-glow itself, which
+     self-clips to the same rounded rect): .price-card's own overflow:hidden
+     would clip descendant painting at its padding edge, which is exactly
+     the 1px the border-glow ring needs to reach to sit on the real stroke
+     rather than just inside it. */
+  .price-card{position:relative; flex:1; max-width:373px; display:flex; flex-direction:column; gap:24px; padding:40px 32px; border-radius:8px; background:var(--card); border:1px solid var(--black-5); opacity:0; transform:translateY(28px); transition:opacity .7s cubic-bezier(.22,.61,.36,1), transform .7s cubic-bezier(.22,.61,.36,1), border-color .35s ease;}
+  .price-card.in-view{opacity:1; transform:translateY(0);}
+  /* Reference component doesn't animate the card shell itself on hover (only
+     the highlighted card's border-trail and the per-feature tooltips move) —
+     kept deliberately restrained here to match, just a faint border brighten. */
+  .price-card:hover{border-color:var(--black-4);}
+  /* Traveling light ON the stroke itself: a picture-frame mask (padding-box
+     vs border-box, composited to keep only the ring between them) clips
+     everything down to just the card's hairline border. The conic-gradient
+     is painted directly as this ring's own background and rotated via an
+     animated custom property, so it fills the ring at full brightness at
+     every angle — no separate moving shape trying to overlap a thin target
+     (that approach under-lit most of the loop since only a sliver of a
+     large translating/spinning shape ever intersected the ring at once).
+     Note: an absolutely-positioned child's containing block is its
+     ancestor's PADDING box, not its border box — so inset:0 here would
+     land this ring one pixel inside .price-card's own 1px border, next to
+     the stroke rather than on it. inset:-1px pushes it back out so this
+     ring's outer edge sits exactly on .price-card's real border-box edge,
+     i.e. the actual 1px line itself. */
+  @property --border-glow-angle{ syntax:'<angle>'; inherits:false; initial-value:0deg; }
+  .border-glow{position:absolute; inset:-1px; border-radius:inherit; pointer-events:none; z-index:2; border:3px solid transparent;
+    background:conic-gradient(from var(--border-glow-angle), transparent 0deg, transparent 300deg, rgba(245,196,0,0) 300deg, rgba(245,196,0,.65) 322deg, rgba(255,209,51,1) 340deg, rgba(245,196,0,.65) 358deg, transparent 360deg) border-box;
+    -webkit-mask-image:linear-gradient(#000,#000), linear-gradient(#000,#000);
+    mask-image:linear-gradient(#000,#000), linear-gradient(#000,#000);
+    -webkit-mask-clip:padding-box, border-box;
+    mask-clip:padding-box, border-box;
+    -webkit-mask-composite:xor;
+    mask-composite:exclude;
+    animation:borderGlowSpin 5s linear infinite;
+  }
+  @supports not (mask-composite: exclude){ .border-glow{display:none;} }
+  @keyframes borderGlowSpin{ to{ --border-glow-angle:360deg; } }
+  .price-badge{position:absolute; top:24px; right:24px; background:var(--yellow-6); color:var(--black-6); font-family:var(--f-mono); font-size:11px; font-weight:500; letter-spacing:1.2px; padding:5px 12px; border-radius:6px; z-index:2;}
+  .price-top{display:flex; flex-direction:column; gap:12px; position:relative; z-index:1;}
+  .price-name{font-family:var(--f-display); font-weight:700; font-size:21px;}
+  .price-amount{display:flex; align-items:flex-end; gap:8px;}
+  .price-amount .num{font-family:var(--f-display); font-weight:900; font-size:38px; line-height:1;}
+  .price-amount .period{font-size:14px; color:var(--gray-txt); padding-bottom:4px;}
+  .price-desc{font-size:14.5px; line-height:1.5; color:var(--black-2);}
+  .price-divider{height:1px; background:var(--black-5); width:100%;}
+  .price-features{display:flex; flex-direction:column; gap:14px; flex:1; position:relative; z-index:1;}
+  .price-feature{display:flex; align-items:flex-start; gap:12px; font-size:14.5px; line-height:1.4; color:var(--black-1);}
+  .price-feature svg{flex-shrink:0; margin-top:2px;}
+  .price-card .btn-primary{justify-content:center; width:100%; padding:14px 16px; border-radius:12px; font-size:15px; position:relative; z-index:1;}
+  /* ============ FINAL CTA ============ */
+  .cta-section{background:var(--yellow-6); padding:80px 120px; display:flex; justify-content:center;}
+  .cta-content{display:flex; flex-direction:column; align-items:center; gap:28px; text-align:center; max-width:1188px;}
+  .cta-content h2{font-family:var(--f-display); font-weight:900; text-transform:uppercase; font-size:clamp(26px,4vw,52px); color:#191919;}
+  .cta-content p{font-size:17px; color:#191919; max-width:620px;}
+  /* ============ SCROLL REVEAL ============ */
+  .reveal{opacity:0; transform:translateY(28px); transition:opacity .7s cubic-bezier(.22,.61,.36,1), transform .7s cubic-bezier(.22,.61,.36,1);}
+  .reveal.in-view{opacity:1; transform:translateY(0);}
+  /* ============ FOOTER ============ */
+  .footer-section{border-top:1px solid var(--black-5); padding:80px 120px 0; display:flex; flex-direction:column; gap:32px; position:relative; overflow:hidden;}
+  .footer-glow{position:absolute; left:50%; top:-241px; width:900px; height:400px; transform:translateX(-50%); background:radial-gradient(ellipse at center, rgba(245,196,0,0.28) 0%, transparent 70%); pointer-events:none;}
+  .footer-top{display:flex; justify-content:space-between; gap:40px; position:relative; z-index:1; flex-wrap:wrap;}
+  .footer-brand{width:360px; display:flex; flex-direction:column; gap:16px;}
+  .footer-brand .tagline{font-family:var(--f-display); font-weight:700; font-size:18px;}
+  .footer-brand .desc{color:var(--gray-txt); font-size:14px; line-height:1.5;}
+  .footer-col{flex:1; min-width:180px; display:flex; flex-direction:column; gap:16px;}
+  .footer-col h4{font-family:var(--f-mono); color:var(--yellow-6); font-size:16px; letter-spacing:1.5px;}
+  .footer-col a,.footer-col span{color:var(--black-1); font-size:14px;}
+  .footer-contact-row{display:flex; gap:10px; align-items:center; color:var(--black-2); font-size:14px;}
+  .footer-col p.small{color:var(--gray-txt); font-size:14px; max-width:240px;}
+  .footer-bottom{display:flex; justify-content:space-between; align-items:center; position:relative; z-index:1; flex-wrap:wrap; gap:12px;}
+  .footer-bottom .copyright{font-family:var(--f-mono); color:var(--black-4); font-size:11px; letter-spacing:0.5px;}
+  .footer-bottom .links{display:flex; gap:24px; font-size:12px; color:var(--gray-txt);}
+  .footer-wordmark{position:relative; width:100%; height:clamp(28px,4.7vw,56px); margin-top:8px; user-select:none; overflow:hidden;}
+  .footer-wordmark svg{display:block; width:100%; height:100%; overflow:visible;}
+  .footer-wordmark text{font-family:var(--f-display); font-weight:900; font-size:clamp(60px,10vw,120px); letter-spacing:2px;}
+  .footer-wordmark .wm-outline{fill:none; stroke:#232323; stroke-width:1px;}
+  .footer-wordmark .wm-fill{fill:url(#footerTextGradient);}
+  @media (max-width: 1100px){
+    .wrap,.price-section,.cta-section,.footer-section{padding-left:32px; padding-right:32px;}
+    .nav-capsule{display:none;}
+    .pricing-grid{flex-direction:column; align-items:center;}
+    .price-card{max-width:460px; width:100%;}
+    .footer-top{flex-direction:column;}
+  }
+
+/* ============ MOBILE NAV ============ */
+.nav-toggle{display:none; align-items:center; justify-content:center; width:44px; height:44px; border-radius:12px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); cursor:pointer; flex-shrink:0;}
+.nav-toggle span{display:block; width:18px; height:2px; background:#fff; position:relative; transition:background .25s ease;}
+.nav-toggle span:before,.nav-toggle span:after{content:''; position:absolute; left:0; width:18px; height:2px; background:#fff; transition:transform .25s ease, top .25s ease;}
+.nav-toggle span:before{top:-6px;}
+.nav-toggle span:after{top:6px;}
+.nav-toggle.open span{background:transparent;}
+.nav-toggle.open span:before{top:0; transform:rotate(45deg);}
+.nav-toggle.open span:after{top:0; transform:rotate(-45deg);}
+.mobile-menu{display:none; flex-direction:column; gap:4px; background:#171717; border:1px solid rgba(255,255,255,0.1); border-radius:16px; padding:12px; position:absolute; left:0; right:0; top:100%; margin-top:8px; z-index:30;}
+.mobile-menu a.nav-link{padding:12px 16px; font-size:16px; font-weight:500; color:var(--black-2); border-radius:10px;}
+.mobile-menu a.nav-link.active{color:var(--black-1); background:rgba(255,255,255,0.06);}
+.mobile-menu .btn-primary{justify-content:center; margin-top:6px;}
+.mobile-menu.open{display:flex;}
+@media (max-width:1100px){
+  .nav-toggle{display:flex;}
+}
+
+/* ============ STICKY NAV ============ */
+.nav-row{position:fixed; top:0; left:0; right:0; width:100%; z-index:100; background:var(--black-6); padding-left:120px; padding-right:120px; box-sizing:border-box;}
+.cldm-home{padding-top:112px;}
+@media (max-width:1100px){
+  .nav-row{padding-left:32px; padding-right:32px;}
+  .cldm-home{padding-top:104px;}
+}
+
+.footer-contact-row:hover{color:var(--yellow-6);}
+</style>
+</head>
+<body>
+<div class="cldm-home">
+
+<!-- NAV + PRICING HEADING + GRID -->
+<section id="heroSection">
+  <div class="wrap">
+    <div class="nav-row">
+      <div class="logo-nav">
+        <div class="cl-mark" style="width:26px; height:33px;">
+          <div class="v1"><div class="in1"><div class="in2"><svg viewBox="0 0 30.6088 33.5376" fill="none"><path d="M28.9939 16.8497V4.1993L15.2668 19.4067L3.69301 31.9226H24.4182L28.9939 26.755V24.5208" stroke="#F5C400" stroke-width="3.2299"/></svg></div></div></div>
+          <div class="v2"><div class="v2-rot"><div class="v2-box"><div class="in1"><div class="in2"><svg viewBox="0 0 30.6088 33.5376" fill="none"><path d="M28.9939 16.8497V4.1993L15.2668 19.4067L3.69301 31.9226H24.4182L28.9939 26.755V24.5208" stroke="white" stroke-width="3.2299"/></svg></div></div></div></div></div>
+        </div>
+        <div class="logo-text"><b>CHAIN LIGHTNING</b><span>DESIGN AND MARKETING</span></div>
+      </div>
+      <div class="nav-capsule">
+        <a class="nav-link" href="index.html">Home</a>
+        <a class="nav-link" href="work.html">Our Work</a>
+        <a class="nav-link" href="services.html">Services</a>
+        <a class="nav-link active" href="pricing.html">Pricing</a>
+        <a class="nav-link" href="contact.html">Contact</a>
+        <a class="btn-primary" href="contact.html" style="padding:10px 16px; border-radius:12px;">Book A Design Show <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0d0d0d" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
+      </div>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu"><span></span></button>
+      <div class="mobile-menu" id="mobileMenu">
+          <a class="nav-link" href="index.html">Home</a>
+          <a class="nav-link" href="work.html">Our Work</a>
+          <a class="nav-link" href="services.html">Services</a>
+          <a class="nav-link active" href="pricing.html">Pricing</a>
+          <a class="nav-link" href="contact.html">Contact</a>
+          <a class="btn-primary" href="contact.html">Book A Design Show</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="price-section">
+    <div class="price-heading">
+      <span class="eyebrow">(PRICING)</span>
+      <h1>Flat Fees. No Surprises.</h1>
+      <p>One flat price per Design Show, agreed before we start. No hourly clock, no line-item invoice, no monthly subscription — you pay once for a launch-ready deliverable.</p>
+    </div>
+
+    <div class="pricing-grid" id="pricingGrid">
+
+      <!-- SINGLE SERVICE -->
+      <div class="price-card">
+        <div class="price-top">
+          <div class="price-name">Single Service</div>
+          <div class="price-amount"><span class="num">$499</span><span class="period">one-time</span></div>
+          <p class="price-desc">One flat-fee Design Show for a single deliverable — pick logo &amp; brand identity, a website, marketing &amp; ad creative, or video.</p>
+        </div>
+        <div class="price-divider"></div>
+        <div class="price-features">
+          <div class="price-feature"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F5C400" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.2l2.4 2.4 4.6-5"/></svg><span>One live Design Show (up to 8 hours)</span></div>
+          <div class="price-feature"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F5C400" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.2l2.4 2.4 4.6-5"/></svg><span>Choose one service: logo, website, marketing, or video</span></div>
+          <div class="price-feature"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F5C400" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.2l2.4 2.4 4.6-5"/></svg><span>Live revisions during the session</span></div>
+          <div class="price-feature"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F5C400" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.2l2.4 2.4 4.6-5"/></svg><span>Final files &amp; source assets included</span></div>
+          <div class="price-feature"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F5C400" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.2l2.4 2.4 4.6-5"/></svg><span>One round of async follow-up polish</span></div>
+        </div>
+        <a class="btn-primary" href="contact.html">Book A Design Show <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0d0d0d" stroke-width="2"><path d="M7 17L17 7M17 7H8M17 7V16"/></svg></a>
+      </div>
+
+      <!-- MULTI-SERVICE BUNDLE (MOST POPULAR) -->
+      <div class="price-card popular">
+        <div class="border-glow"></div>
+        <span class="price-badge">MOST POPULAR</span>
+        <div class="price-top">
+          <div class="price-name">Multi-Service Bundle</div>
+          <div class="price-amount"><span class="num">$699</span><span class="period">starting at</span></div>
+          <p class="price-desc">Bundle two or more services into connected Design Shows so your brand carries through consistently.</p>
+        </div>
+        <div class="price-divider"></div>
+        <div class="price-features">
+          <div class="price-feature"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F5C400" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.2l2.4 2.4 4.6-5"/></svg><span>Everything in Single Service</span></div>
+          <div class="price-feature"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F5C400" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.2l2.4 2.4 4.6-5"/></svg><span>Two or more connected Design Shows</span></div>
+          <div class="price-feature"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F5C400" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.2l2.4 2.4 4.6-5"/></svg><span>Consistent brand system across every deliverable</span></div>
+          <div class="price-feature"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F5C400" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.2l2.4 2.4 4.6-5"/></svg><span>Priority scheduling</span></div>
+          <div class="price-feature"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F5C400" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.2l2.4 2.4 4.6-5"/></svg><span>One dedicated point of contact</span></div>
+        </div>
+        <a class="btn-primary" href="contact.html">Book A Design Show <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0d0d0d" stroke-width="2"><path d="M7 17L17 7M17 7H8M17 7V16"/></svg></a>
+      </div>
+
+      <!-- ONGOING PARTNER -->
+      <div class="price-card">
+        <div class="price-top">
+          <div class="price-name">Ongoing Partner</div>
+          <div class="price-amount"><span class="num">$899</span><span class="period">quarterly</span></div>
+          <p class="price-desc">For teams that need a running design partner, not a one-off project — recurring Design Shows on your schedule.</p>
+        </div>
+        <div class="price-divider"></div>
+        <div class="price-features">
+          <div class="price-feature"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F5C400" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.2l2.4 2.4 4.6-5"/></svg><span>Everything in Multi-Service Bundle</span></div>
+          <div class="price-feature"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F5C400" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.2l2.4 2.4 4.6-5"/></svg><span>Recurring Design Shows on a cadence that fits you</span></div>
+          <div class="price-feature"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F5C400" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.2l2.4 2.4 4.6-5"/></svg><span>Dedicated creative team assigned to your brand</span></div>
+          <div class="price-feature"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F5C400" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.2l2.4 2.4 4.6-5"/></svg><span>Unlimited switching between logo, site, marketing, video</span></div>
+          <div class="price-feature"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F5C400" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.2l2.4 2.4 4.6-5"/></svg><span>Quarterly brand health check-in</span></div>
+        </div>
+        <a class="btn-primary" href="contact.html">Talk To Us <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0d0d0d" stroke-width="2"><path d="M7 17L17 7M17 7H8M17 7V16"/></svg></a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="cta-section">
+  <div class="cta-content reveal">
+    <h2>Stop bleeding time and money on slow design.</h2>
+    <p>Book a free 30-minute call. We'll show you what a Design Show can do for your brand.</p>
+    <a class="btn-dark" href="contact.html">Book a Design Show <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#F5C400" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer-section">
+  <div class="footer-glow"></div>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <div class="logo-nav">
+        <div class="cl-mark" style="width:20px; height:25.42px;">
+          <div class="v1"><div class="in1"><div class="in2"><svg viewBox="0 0 30.6088 33.5376" fill="none"><path d="M28.9939 16.8497V4.1993L15.2668 19.4067L3.69301 31.9226H24.4182L28.9939 26.755V24.5208" stroke="#F5C400" stroke-width="3.2299"/></svg></div></div></div>
+          <div class="v2"><div class="v2-rot"><div class="v2-box"><div class="in1"><div class="in2"><svg viewBox="0 0 30.6088 33.5376" fill="none"><path d="M28.9939 16.8497V4.1993L15.2668 19.4067L3.69301 31.9226H24.4182L28.9939 26.755V24.5208" stroke="white" stroke-width="3.2299"/></svg></div></div></div></div></div>
+        </div>
+        <div class="logo-text"><b style="font-size:21.47px;">CHAIN LIGHTNING</b><span style="font-size:8.91px; letter-spacing:3.48px;">DESIGN AND MARKETING</span></div>
+      </div>
+      <div class="tagline">Your brand. Built live. Shipped today.</div>
+      <div class="desc">Industry-leading branding, design, and marketing — built live with you, launched in a day, not a quarter.</div>
+    </div>
+    <div class="footer-col">
+      <h4>NAVIGATION</h4>
+      <a href="index.html">Home</a><a href="work.html">Our Work</a><a href="services.html">Services</a><a href="pricing.html">Pricing</a><a href="contact.html">Contact</a>
+    </div>
+    <div class="footer-col">
+      <h4>CONTACT</h4>
+      <a class="footer-contact-row" href="https://mail.google.com/mail/?view=cm&amp;fs=1&amp;to=hello@chain-lightning.com" target="_blank" rel="noopener"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M4 6.5l8 6 8-6"/></svg> hello@chain-lightning.com</a>
+      <a class="footer-contact-row" href="tel:+16262681545"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 3.5h3l2 5-2.5 2a12 12 0 0 0 5.5 5.5l2-2.5 5 2v3a2 2 0 0 1-2 2C10.5 21 3 13.5 3 4.5a2 2 0 0 1 2-2z"/></svg> (626) 268-1545</a>
+      <a class="footer-contact-row" href="https://www.google.com/maps/search/?api=1&amp;query=Los+Angeles%2C+CA" target="_blank" rel="noopener"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="9" r="2.3"/></svg> Los Angeles, CA</a>
+    </div>
+    <div class="footer-col">
+      <h4>GET STARTED</h4>
+      <p class="small">See your brand built live, start to finish.</p>
+      <a class="btn-primary" href="contact.html" style="justify-content:center;">Book a Design Show <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0d0d0d" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></a>
+    </div>
+  </div>
+  <div class="divider"></div>
+  <div class="footer-bottom">
+    <div class="copyright">© 2026 CHAIN LIGHTNING D&amp;M</div>
+    <div class="links"><span>Privacy Policy</span><span>Terms and Conditions</span></div>
+  </div>
+  <div class="footer-wordmark" id="footerWordmark">
+    <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs>
+        <linearGradient id="footerTextGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#F5C400"/>
+          <stop offset="50%" stop-color="#fff"/>
+          <stop offset="100%" stop-color="#F5C400"/>
+        </linearGradient>
+        <radialGradient id="footerRevealGrad" gradientUnits="objectBoundingBox" cx="-0.5" cy="-0.5" r="0.32">
+          <stop offset="0%" stop-color="#fff" stop-opacity="1"/>
+          <stop offset="100%" stop-color="#fff" stop-opacity="0"/>
+        </radialGradient>
+        <mask id="footerRevealMask">
+          <rect x="0" y="0" width="100%" height="100%" fill="url(#footerRevealGrad)"/>
+        </mask>
+      </defs>
+      <text class="wm-outline" x="50%" y="0" text-anchor="middle" dominant-baseline="hanging">CHAIN LIGHTNING</text>
+      <text class="wm-fill" x="50%" y="0" text-anchor="middle" dominant-baseline="hanging" mask="url(#footerRevealMask)">CHAIN LIGHTNING</text>
+    </svg>
+  </div>
+</footer>
+
+</div>
+<script>
+// Pricing cards: staggered reveal the first time the grid scrolls into view
+// (fade + slide up, one card after another) — a restrained echo of the
+// reference component's entrance motion, done with a plain IntersectionObserver
+// instead of framer-motion.
+(function(){
+  var cards = Array.prototype.slice.call(document.querySelectorAll('.price-card'));
+  if(!cards.length) return;
+  if(!('IntersectionObserver' in window)){ cards.forEach(function(c){ c.classList.add('in-view'); }); return; }
+  var observer = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting){
+        var idx = cards.indexOf(entry.target);
+        setTimeout(function(){ entry.target.classList.add('in-view'); }, idx * 110);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.2 });
+  cards.forEach(function(c){ observer.observe(c); });
+})();
+
+// General scroll-reveal: fade + slide up any ".reveal" element the first
+// time it enters the viewport (final CTA).
+(function(){
+  var els = Array.prototype.slice.call(document.querySelectorAll('.reveal'));
+  if(!els.length) return;
+  if(!('IntersectionObserver' in window)){ els.forEach(function(e){ e.classList.add('in-view'); }); return; }
+  var observer = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting){ entry.target.classList.add('in-view'); observer.unobserve(entry.target); }
+    });
+  }, { threshold: 0.15 });
+  els.forEach(function(e){ observer.observe(e); });
+})();
+
+// Footer wordmark hover-reveal: the big outlined "CHAIN LIGHTNING" wordmark
+// stays a plain outline until the cursor moves over it, then a gradient-
+// filled copy is revealed through a soft radial spotlight mask that follows
+// the mouse (eased), so the fill only shows near the cursor.
+(function(){
+  var wrap = document.getElementById('footerWordmark');
+  var grad = document.getElementById('footerRevealGrad');
+  if(!wrap || !grad) return;
+  if(window.matchMedia && !window.matchMedia('(pointer: fine)').matches) return;
+
+  var OFF = -0.5;
+  var EASE = 0.15;
+  var target = { x: OFF, y: OFF };
+  var pos = { x: OFF, y: OFF };
+
+  function loop(){
+    pos.x += (target.x - pos.x) * EASE;
+    pos.y += (target.y - pos.y) * EASE;
+    grad.setAttribute('cx', pos.x.toFixed(4));
+    grad.setAttribute('cy', pos.y.toFixed(4));
+    requestAnimationFrame(loop);
+  }
+
+  function move(e){
+    var rect = wrap.getBoundingClientRect();
+    target.x = (e.clientX - rect.left) / rect.width;
+    target.y = (e.clientY - rect.top) / rect.height;
+  }
+
+  function leave(){
+    target.x = OFF;
+    target.y = OFF;
+  }
+
+  wrap.addEventListener('mousemove', move);
+  wrap.addEventListener('mouseleave', leave);
+  requestAnimationFrame(loop);
+})();
+</script>
+<script>
+// Mobile nav: hamburger toggle shows/hides a dropdown panel with the same
+// links as the desktop nav-capsule (which is hidden below 1100px). Closes
+// on outside click or when a link inside it is chosen.
+(function(){
+  var toggle = document.getElementById('navToggle');
+  var menu = document.getElementById('mobileMenu');
+  if(!toggle || !menu) return;
+  toggle.addEventListener('click', function(e){
+    e.stopPropagation();
+    toggle.classList.toggle('open');
+    menu.classList.toggle('open');
+  });
+  menu.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click', function(){
+      toggle.classList.remove('open');
+      menu.classList.remove('open');
+    });
+  });
+  document.addEventListener('click', function(e){
+    if(!menu.contains(e.target) && e.target !== toggle){
+      toggle.classList.remove('open');
+      menu.classList.remove('open');
+    }
+  });
+})();
+</script>
+</body>
+</html>
