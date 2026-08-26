@@ -64,7 +64,7 @@
   .hero-sub{font-size:18px; line-height:1.5; text-align:center; color:var(--black-1); max-width:560px;}
   .hero-btn-row{display:flex; gap:16px; align-items:center; flex-wrap:wrap; justify-content:center;}
   /* ---- ContainerScroll-style tilt-in card ---- */
-  .hero-scroll{position:relative; z-index:2; display:flex; align-items:flex-start; justify-content:center; padding:56px 20px 0;}
+  .hero-scroll{position:relative; z-index:2; display:flex; align-items:flex-start; justify-content:center; padding:56px 120px 0;}
   .hero-scroll-inner{width:100%; max-width:1200px; position:relative; padding:40px 0 56px;}
   .hero-header{max-width:920px; margin:0 auto; display:flex; flex-direction:column; align-items:center; gap:24px; will-change:transform;}
   .hero-card-wrap{perspective:1200px; margin-top:64px;}
@@ -185,13 +185,14 @@
   .mk-x{color:#676767;}
   .divider{height:1px; background:var(--black-5); width:100%;}
   /* ============ BOOK FORM ============ */
-  .book-section{padding:80px 120px; display:flex; gap:40px; align-items:center; justify-content:center;}
-  .book-left{flex:1; display:flex; flex-direction:column; justify-content:space-between; gap:40px; max-width:560px;}
-  .book-left h2{font-family:var(--f-display); font-weight:900; text-transform:uppercase; font-size:clamp(28px,4vw,52px);}
+  .book-section{padding:40px 120px; display:flex; gap:40px; align-items:center; justify-content:center; min-height:calc(100vh - 86px); box-sizing:border-box;}
+  .book-left{flex:1; display:flex; flex-direction:column; justify-content:center; gap:40px; max-width:600px;}
+  .book-left > div:first-child{display:flex; flex-direction:column; gap:24px;}
+  .book-left h2{font-family:var(--f-display); font-weight:900; text-transform:uppercase; font-size:clamp(28px,4vw,52px); white-space:nowrap;}
   .book-left h2 .accent{color:var(--yellow-6);}
   .book-left p{font-size:18px; line-height:1.45; color:var(--black-2); max-width:480px;}
   .book-left img{width:100%; max-width:521px; border-radius:16px; display:block;}
-  .book-form{background:var(--card); border:1px solid var(--black-5); border-radius:16px; padding:40px; display:flex; flex-direction:column; gap:22px; width:464px; max-width:100%; position:relative;}
+  .book-form{background:var(--card); border:1px solid var(--black-5); border-radius:16px; padding:24px; display:flex; flex-direction:column; gap:8px; width:464px; max-width:100%; position:relative;}
   .book-form:before,.book-form:after,.book-form .c3,.book-form .c4{content:''; position:absolute; width:13px; height:13px; border:2px solid var(--yellow-6);}
   .book-form:before{top:6px; left:6px; border-right:none; border-bottom:none; border-radius:9px 0 0 0;}
   .book-form:after{top:6px; right:6px; border-left:none; border-bottom:none; border-radius:0 9px 0 0;}
@@ -199,7 +200,7 @@
   .book-form .c4{bottom:6px; right:6px; border-left:none; border-top:none; border-radius:0 0 9px 0;}
   .book-form .intro{font-size:16px;}
   .book-form .intro b{color:var(--yellow-6); font-family:var(--f-display); font-weight:700;}
-  .field{display:flex; flex-direction:column; gap:4px; width:100%; border:1px solid var(--black-5); border-radius:8px; padding:10px 16px 12px; transition:border-color .2s ease;}
+  .field{display:flex; flex-direction:column; gap:4px; width:100%; border:1px solid var(--black-5); border-radius:8px; padding:9px 16px; transition:border-color .2s ease;}
   .field:focus-within{border-color:var(--yellow-6);}
   .field label{font-family:var(--f-field); font-size:12px; color:var(--black-2);}
   .field select{cursor:pointer;}
@@ -787,9 +788,9 @@
     <div class="field"><label>Name*</label><input type="text" name="Name" placeholder="Jane Doe" required></div>
     <div class="field"><label>Email*</label><input type="email" name="Email" placeholder="jane@yourbrand.com" required></div>
     <div class="field"><label>Phone*</label><input type="tel" name="Phone" placeholder="(555) 000-0000" required></div>
-    <div class="field"><label>Service*</label>
+    <div class="field"><label>What do you need?*</label>
       <select name="Service" required>
-        <option value="" disabled selected>Select a service...</option>
+        <option value="" disabled selected>Branding, Web, or Both</option>
         <option>Brand Identity &amp; Logo Design</option>
         <option>Website &amp; Landing Pages</option>
         <option>Social Media &amp; Content</option>
@@ -798,7 +799,7 @@
         <option>Other</option>
       </select>
     </div>
-    <div class="field"><label>What's slowing your brand down? (optional)</label><textarea name="Notes" rows="2" placeholder="Tell us where things are stuck…"></textarea></div>
+    <div class="field"><label>What's slowing your brand down? (optional)</label><textarea name="Notes" rows="1" placeholder="Tell us where things are stuck…"></textarea></div>
     <label class="checkbox-row"><input type="checkbox" required> By submitting this form, you agree to our Privacy Policy and Terms and Conditions.</label>
     <button type="submit" class="btn-primary" style="justify-content:center; width:100%;">Book a Design Show <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0d0d0d" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg></button>
   </form>
