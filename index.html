@@ -80,7 +80,7 @@
   @keyframes socialMarquee{ from{transform:translateX(0);} to{transform:translateX(-50%);} }
   @media (prefers-reduced-motion: reduce){ .social-proof-track{animation:none;} }
   /* ============ VISION ENGINE ============ */
-  .vision-section{padding:140px 120px; display:flex; flex-direction:column; align-items:center; gap:72px;}
+  .vision-section{padding:80px 120px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:72px; min-height:calc(100vh - 86px); box-sizing:border-box;}
   .section-heading-block{display:flex; flex-direction:column; align-items:center; gap:20px; text-align:center; max-width:900px;}
   .section-heading-block h2{font-family:var(--f-display); font-weight:900; text-transform:uppercase; font-size:clamp(30px,4.2vw,52px); line-height:1.05;}
   .section-heading-block p{font-size:19px; color:var(--black-1);}
@@ -125,7 +125,7 @@
   .launch-nav-btns{display:flex; gap:12px; position:relative; z-index:2;}
   .launch-nav-btns button{width:44px; height:44px; border-radius:22px; background:rgba(13,13,13,0.7); border:1px solid var(--black-5); display:flex; align-items:center; justify-content:center; color:#fff;}
   /* ============ TIMELINE ============ */
-  .timeline-section{padding:140px 120px; display:flex; flex-direction:column; align-items:center; gap:72px;}
+  .timeline-section{padding:80px 120px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:72px; min-height:calc(100vh - 86px); box-sizing:border-box;}
   .timeline-row{display:flex; align-items:center; width:100%;}
   .t-stop{display:flex; flex-direction:column; align-items:center; gap:21px; width:140px; flex-shrink:0;}
   .t-stop .icon{width:64px; height:64px; border-radius:16px; display:flex; align-items:center; justify-content:center; overflow:hidden;}
@@ -138,7 +138,7 @@
   .ghost-row{display:flex; gap:16px;}
   .ghost-pill{display:flex; align-items:center; gap:8px; border:1px dashed var(--black-5); border-radius:999px; padding:10px 14px; font-size:12px; color:var(--gray-txt); font-weight:500;}
   /* ============ STATS ============ */
-  .stats-section{background:var(--yellow-6); padding:140px 120px; display:flex; gap:80px; color:var(--black-6);}
+  .stats-section{background:var(--yellow-6); padding:80px 120px; display:flex; align-items:center; gap:80px; color:var(--black-6); min-height:calc(100vh - 86px); box-sizing:border-box;}
   .stats-left{width:460px; flex-shrink:0; display:flex; flex-direction:column; gap:24px;}
   .pill-badge{display:inline-flex; align-self:flex-start; width:fit-content; background:var(--yellow-3); border-radius:100px; padding:8px 18px; font-family:var(--f-mono); font-size:12px; letter-spacing:0.96px;}
   .stats-left h2{font-family:var(--f-display); font-weight:900; text-transform:uppercase; font-size:clamp(30px,4vw,52px); line-height:1.06;}
@@ -237,7 +237,7 @@
   .footer-wordmark .wm-fill{fill:url(#footerTextGradient);}
 
   /* ============ FOUNDER ============ */
-  .founder-section{background:var(--card); padding:80px 120px; display:flex; flex-direction:column; align-items:center; gap:40px;}
+  .founder-section{background:var(--card); padding:60px 120px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:40px; min-height:calc(100vh - 86px); box-sizing:border-box;}
   .founder-content{display:flex; align-items:center; justify-content:center; width:100%; max-width:1200px;}
   .founder-photo{width:510px; max-width:55%; height:420px; flex-shrink:0; border-radius:16px; overflow:hidden; position:relative; z-index:1;}
   .founder-photo img{width:100%; height:100%; object-fit:cover; display:block;}
@@ -261,7 +261,7 @@
      ease, and the spring(damping:25,stiffness:150) cursor-follow are all the
      exact numbers from its source — reimplemented in vanilla CSS/JS since
      this site has no React/framer-motion runtime. */
-  .testimonial-section{padding:80px 120px 120px; display:flex; flex-direction:column; align-items:center; gap:40px; background:#171717;}
+  .testimonial-section{padding:60px 120px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:40px; background:#171717; min-height:calc(100vh - 86px); box-sizing:border-box;}
   .section-heading-block h2 .accent{color:var(--yellow-6);}
   .testimonial-card{width:884px; max-width:100%; background:#0d0d0d; border:1px solid var(--black-5); border-radius:16px; padding:32px; display:flex; flex-direction:column; gap:32px; position:relative; cursor:none;}
   .testimonial-card:before,.testimonial-card:after,.testimonial-card .c3,.testimonial-card .c4{content:''; position:absolute; width:13px; height:13px; border:2px solid var(--yellow-6);}
