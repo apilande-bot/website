@@ -60,6 +60,10 @@
   .cs-col img{width:100%; height:auto; border-radius:16px; display:block;}
   @keyframes cs-col-scroll{ from{ transform:translateY(0); } to{ transform:translateY(calc(-1 * var(--scroll-dist, 0px))); } }
   @media (prefers-reduced-motion: reduce){ .cs-col-anim{animation:none !important;} }
+  .cs-gallery-wrap.is-static{height:auto; padding-bottom:32px; align-items:flex-start;}
+  .cs-gallery-wrap.is-static .cs-gallery{height:auto;}
+  .cs-gallery-wrap.is-static .cs-col{height:auto; overflow:visible; -webkit-mask-image:none; mask-image:none;}
+  .cs-gallery-wrap.is-static .cs-col-anim{animation:none !important; transform:none !important;}
   .cs-gal-item{cursor:pointer; position:relative; display:block; border-radius:16px; overflow:hidden;}
   .cs-gal-item img{width:100%; height:auto; border-radius:16px; display:block;}
   .cs-vid-item .play-btn{position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.22); transition:background .2s ease;}
@@ -420,6 +424,25 @@
         var cat = item.getAttribute('data-cat');
         item.style.display = (filter === 'all' || cat === filter) ? '' : 'none';
       });
+      // Filtering hides most items, which breaks the marquee's auto-scroll
+      // (it keeps scrolling the distance sized for the full, unfiltered
+      // gallery). So when a filter narrows the set, freeze the columns into
+      // a plain static, top-aligned stack of just the matching items —
+      // still clickable, just no animation and no leftover scroll space.
+      var wrap = document.querySelector('.cs-gallery-wrap');
+      var marquee = window.__csGalleryMarquee;
+      if(filter === 'all'){
+        if(wrap) wrap.classList.remove('is-static');
+        if(marquee) marquee.setup();
+      } else {
+        if(wrap) wrap.classList.add('is-static');
+        if(marquee){
+          marquee.cols.forEach(function(anim){
+            marquee.clearClones(anim);
+            anim.style.removeProperty('--scroll-dist');
+          });
+        }
+      }
     });
   });
 </script>
@@ -462,6 +485,10 @@
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(setup, 200);
   });
+
+  // Exposed so the gallery filter pills can freeze/restore the marquee
+  // when they narrow the visible item set (see filter-pill handler above).
+  window.__csGalleryMarquee = { setup: setup, clearClones: clearClones, cols: cols };
 })();
 </script>
 <script>
