@@ -205,6 +205,7 @@
   .field label{font-family:var(--f-field); font-size:12px; color:var(--black-2);}
   .field select{cursor:pointer;}
   .field input,.field select,.field textarea{border:none; border-radius:0; padding:0; background:transparent; color:#fff; font-family:var(--f-field); font-size:16px; width:100%; outline:none;}
+.field input:-webkit-autofill,.field input:-webkit-autofill:hover,.field input:-webkit-autofill:focus,.field input:-webkit-autofill:active{-webkit-text-fill-color:#fff !important; -webkit-box-shadow:0 0 0 1000px var(--card) inset !important; box-shadow:0 0 0 1000px var(--card) inset !important; caret-color:#fff; transition:background-color 5000s ease-in-out 0s, color 5000s ease-in-out 0s; font-family:var(--f-field) !important; font-size:16px !important;}
   .field textarea{resize:none; font-family:var(--f-field);}
   .field input::placeholder,.field textarea::placeholder{color:var(--black-2);}
   .field select:invalid,.field select option[value=""]{color:var(--black-2);}
